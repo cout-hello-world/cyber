@@ -19,7 +19,7 @@ static char encode(char offset, char ch)
 	return ch;
 }
 
-void ceaser(char encode_or_decode, int offset, char *string)
+char *ceaser(char encode_or_decode, int offset, char *string)
 {
 	if (encode_or_decode == 'd') {
 		offset = -offset;
@@ -34,4 +34,6 @@ void ceaser(char encode_or_decode, int offset, char *string)
 		*string = encode(offset, *string);
 		++string;
 	}
+
+	return string;
 }

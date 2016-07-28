@@ -1,26 +1,41 @@
 #include <string.h>
+#include <stdlib.h>
 #include <openssl/md5.h>
 
 #include "cyber_func.h"
 
-int md5_undo(char *out_buffer, const unsigned char *md5_hash)
+int md5_undo(unsigned char *buffer, const unsigned char *md5_hash)
 {
-	static const unsigned max_len = MD5_OUT_STR_MIN_LENGTH - 1;
+	static const unsigned max_len = MD5_OUT_BUFFER_MIN_LENGTH - 1;
 
 	unsigned char md5_buffer[MD5_DIGEST_LENGTH];
 
-	int length;
-	int i;
-	
+	unsigned length;
+	unsigned i;
+
 	for (length = 0; length <= max_len; ++i) {
 		for (i = 0; i != length; ++i) {
-			out_buffer[i] = '0';
+			buffer[i] = '0';
 		}
-		
-		MD5(out_buffer, length, md5_buffer)
-		if (!memcmp(md5_buffer, out_buffer, length)) {
-			out_buffer[length] = '\0';
-			return EXIT_SUCCESS;
+
+		while (1) {
+			MD5(buffer, length, md5_buffer);
+			if (!memcmp(md5_buffer, md5_hash, length)) {
+				buffer[length] = '\0';
+				return EXIT_SUCCESS;
+			}
+
+			for (i = 0; i != length; ++i) {
+				if (buffer[i] == '9') {
+					buffer[i] = 'a';
+					break;
+				} else if (buffer[i] != 'z') {
+					++buffer[i];
+					break;
+				} else if (i + 1 == length) {
+					return EXIT_FAILURE;
+				}
+			}
 		}
 	}
 

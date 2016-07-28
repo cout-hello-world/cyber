@@ -2,7 +2,7 @@
 #define CYBER_FUNC_H
 
 #define MD5_HASH_LENGTH 16
-#define MD5_OUT_BUFFER_MIN_LENGTH 7
+#define MD5_OUT_BUFFER_MIN_LENGTH 8
 
 char *ceaser(char encode_or_decode, int offset, char *string);
 

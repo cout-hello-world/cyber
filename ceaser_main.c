@@ -4,11 +4,6 @@
 
 #include "cyber_func.h"
 
-static void print_help(void)
-{
-	puts("Usage... to be completed");
-}
-
 int main(int argc, char *argv[])
 {
 	char encode = 'e';
@@ -29,13 +24,12 @@ int main(int argc, char *argv[])
 	}
 
 	if (!string) {
-		print_help();
+		printf(
+		 "Usage %s --string <string_to_encode> --offset <number> --code{e|d}\n",
+		 argv[0]);
 		return EXIT_FAILURE;
 	}
 
-	/* printf("encode = %c, offset = %d, string = %s\n", encode, offset, string);
-	 */
-	
 	ceaser(encode, offset, string);
 	printf("%s\n", string);
 

@@ -13,14 +13,14 @@ int md5_undo(unsigned char *buffer, const unsigned char *md5_hash)
 	unsigned length;
 	unsigned i;
 
-	for (length = 0; length <= max_len; ++i) {
+	for (length = 1; length <= max_len; ++length) {
 		for (i = 0; i != length; ++i) {
 			buffer[i] = '0';
 		}
 
 		while (1) {
 			MD5(buffer, length, md5_buffer);
-			if (!memcmp(md5_buffer, md5_hash, length)) {
+			if (!memcmp(md5_buffer, md5_hash, MD5_DIGEST_LENGTH)) {
 				buffer[length] = '\0';
 				return EXIT_SUCCESS;
 			}
@@ -29,14 +29,20 @@ int md5_undo(unsigned char *buffer, const unsigned char *md5_hash)
 				if (buffer[i] == '9') {
 					buffer[i] = 'a';
 					break;
-				} else if (buffer[i] != 'z') {
+				} else if (buffer[i] == 'z') {
+					if (i + 1 == length) {
+						goto outer;
+					} else {
+						buffer[i] = '0';
+					}
+				} else {
 					++buffer[i];
 					break;
-				} else if (i + 1 == length) {
-					return EXIT_FAILURE;
 				}
 			}
 		}
+	outer:
+		;
 	}
 
 	return EXIT_FAILURE;
